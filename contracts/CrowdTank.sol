@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.3;
 
-// creating a crowd funding app as a project (2/6/2025) 
+// creating a crowd funding app as a project (2/6/2025)  
 
 contract CrowdTank {
+
+    // nullclass internship --- task2 ( line 9 , 61 , 71 to 73 )
+    uint TotalRaisedFunding;
+
     //data type for project details.
     struct project {
         address creator;
@@ -53,12 +57,19 @@ contract CrowdTank {
          require(msg.value>0 , "send some ether to contribute in the project");
          Project.amountRaised+=msg.value;
          Contributions[_projectID][msg.sender] = msg.value;
+         // task 2 (line 61)
+         TotalRaisedFunding+=msg.value;
 
          emit funded(_projectID, msg.sender, msg.value);
 
          if (Project.amountRaised>=Project.fundingGoal) {
             Project.funded = true;
          }
+    }
+
+    // task 2 ( line 71 to 73 )
+    function Get_Total_Raised_Funding() view public returns(uint) {
+        return TotalRaisedFunding;
     }
 
     // withdrawing fund = user
@@ -78,4 +89,16 @@ contract CrowdTank {
         require(Project.deadline<=block.timestamp , "deadline has not reached , admin can't withdraw");
         payable(msg.sender).transfer(totalfunding);
     }
+
+      //nullclass internship --- task 1  ( line 83 to 91 )
+      function Time_Left(uint projectID) view public returns(uint) {
+        project storage Project = Projects[projectID];
+        if (block.timestamp >= Project.deadline) {
+            return 0;
+        } else {
+            return(Project.deadline - block.timestamp);
+        }
+
+      }
+    
 }

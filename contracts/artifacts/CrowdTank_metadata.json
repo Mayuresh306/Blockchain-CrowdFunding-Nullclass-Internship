@@ -129,6 +129,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "Get_Total_Raised_Funding",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -172,6 +185,25 @@
 						"internalType": "bool",
 						"name": "funded",
 						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectID",
+						"type": "uint256"
+					}
+				],
+				"name": "Time_Left",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -278,11 +310,11 @@
 	},
 	"sources": {
 		"contracts/CrowdTank.sol": {
-			"keccak256": "0xcca0dae6bc4a6a62f601d2c9d6727d6f6204aee571644f8d8534bf6a9bc35d33",
+			"keccak256": "0xbbf7243789f12e3b8a5baa4d7ef728decd4d48f0ca08cbd36533acdf194049eb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c4c0946ce2adfa4af956d2784e08192f23ba888374266d8e6d782ca02e904f6c",
-				"dweb:/ipfs/QmV2yAGP39oUu31R5Cw5cyMCnxkRtpuva14dinUxP4hh1v"
+				"bzz-raw://547a0964c42a0a1b07072215e8ea1aef438f6c6941cd34f76b883d107d73f6e4",
+				"dweb:/ipfs/QmYjvPswPR6exLd7Sr7bBcwBzuVXyinYLan7JbWkiJfzWh"
 			]
 		}
 	},
