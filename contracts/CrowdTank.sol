@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.3;
 
-// creating a crowd funding app as a project (2/6/2025)  
+// creating a crowd funding app as a project (2/6/2025)
+// nullclass internship --- task1 (line 3 to 9 , 25 )
 
 contract CrowdTank {
 
@@ -31,7 +32,10 @@ contract CrowdTank {
     // events 
     event ProjectCreated(uint indexed projectID , address indexed creator , string name , string description , uint fundingGoal , uint deadline);
     event funded(uint indexed projectID , address contributor , uint amount);
-    event fundsWithdrawn(uint indexed projectID , address withdrawer , uint amount , string withdrawerType);
+
+    // nullclass internship --- task 3 (35 , 36 , 84 , 98)
+    event userWithdrawn(uint indexed projectID , address withdrawer , uint amount);
+    event creatorWithdrawn(uint indexed projectID , address withdrawer , uint amount );
 
     // creating the 'project create' function
     function createProject(string memory _name , string memory _description , uint _fundingGoal , uint _durationSeconds , uint _id) external {
@@ -78,6 +82,9 @@ contract CrowdTank {
         require(Project.amountRaised<Project.fundingGoal , "Funding goal has reached , user can't withdraw");
         uint fundsContributed = Contributions[_projectID][msg.sender];
         payable(msg.sender).transfer(fundsContributed);
+        // task3 --- (line 84)
+        emit userWithdrawn(_projectID, msg.sender, msg.value);
+        
     }
 
     // withdrawing funds = project creator
@@ -88,6 +95,9 @@ contract CrowdTank {
         require(Project.creator == msg.sender , "only admin can withdraw");
         require(Project.deadline<=block.timestamp , "deadline has not reached , admin can't withdraw");
         payable(msg.sender).transfer(totalfunding);
+
+        // task3 --- (line 98)
+        emit creatorWithdrawn(_projectID, msg.sender, msg.value);
     }
 
       //nullclass internship --- task 1  ( line 83 to 91 )
@@ -100,5 +110,16 @@ contract CrowdTank {
         }
 
       }
-    
+
+      // nullclass internship --- task 4 (line 114 to 121)
+    function Remaining_Fund(uint projectID) public view returns(uint fundingGoal , uint remainingFund) {
+        project storage Project = Projects[projectID];
+        fundingGoal = Project.fundingGoal;
+        require(Project.creator != address(0), "project has not been created yet!");
+        if (Project.amountRaised >= Project.fundingGoal) {
+             remainingFund = 0;
+        } else {
+            remainingFund = Project.fundingGoal - Project.amountRaised;
+        }
+    }
 }

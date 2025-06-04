@@ -60,6 +60,31 @@
 					{
 						"indexed": false,
 						"internalType": "address",
+						"name": "withdrawer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "creatorWithdrawn",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "projectID",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
 						"name": "contributor",
 						"type": "address"
 					},
@@ -93,15 +118,9 @@
 						"internalType": "uint256",
 						"name": "amount",
 						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "withdrawerType",
-						"type": "string"
 					}
 				],
-				"name": "fundsWithdrawn",
+				"name": "userWithdrawn",
 				"type": "event"
 			},
 			{
@@ -185,6 +204,30 @@
 						"internalType": "bool",
 						"name": "funded",
 						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectID",
+						"type": "uint256"
+					}
+				],
+				"name": "Remaining_Fund",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "fundingGoal",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "remainingFund",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -310,11 +353,11 @@
 	},
 	"sources": {
 		"contracts/CrowdTank.sol": {
-			"keccak256": "0xbbf7243789f12e3b8a5baa4d7ef728decd4d48f0ca08cbd36533acdf194049eb",
+			"keccak256": "0xbca950b6bf9afe0df0d734d445540bb1e370110893387c7f8efd87d8cb1887f7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://547a0964c42a0a1b07072215e8ea1aef438f6c6941cd34f76b883d107d73f6e4",
-				"dweb:/ipfs/QmYjvPswPR6exLd7Sr7bBcwBzuVXyinYLan7JbWkiJfzWh"
+				"bzz-raw://f30d78f4b0a2551cfc050d618dc2ff738d54e474586215ea5eab70b867ed734d",
+				"dweb:/ipfs/QmTojsqpgnavGGvKMKF8Z9H2LWy6Ek6DmnMrPxHxdFgKAa"
 			]
 		}
 	},
