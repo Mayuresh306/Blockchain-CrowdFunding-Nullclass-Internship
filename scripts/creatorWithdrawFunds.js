@@ -6,12 +6,12 @@ async function main() {
     
     const Contract = await ethers.getContractAt("CrowdTank" , ContractAddress , creator);
 
-    const _projectID = 1;
+    const projectID = 2;
 
-    const tx = await Contract.creatorWithdraw(_projectID);
+    const tx = await Contract.creatorWithdraw(projectID);
     await tx.wait;
 
-    console.log(" Project creator withdrew the funds from project :" , _projectID);
+    console.log(" Project creator withdrew the funds from project :" , projectID);
 }
 
 main().catch((error) => {
