@@ -148,6 +148,24 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_projectID",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_deadline",
+						"type": "uint256"
+					}
+				],
+				"name": "Extend_Deadline",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "Get_Total_Raised_Funding",
 				"outputs": [
@@ -338,7 +356,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/CrowdTank.sol": "CrowdTank"
+			"CROWD_TANK/contracts/CrowdTank.sol": "CrowdTank"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -352,12 +370,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/CrowdTank.sol": {
-			"keccak256": "0xbca950b6bf9afe0df0d734d445540bb1e370110893387c7f8efd87d8cb1887f7",
+		"CROWD_TANK/contracts/CrowdTank.sol": {
+			"keccak256": "0xe096246687668f883b34f6fe748632635a9aeb1a6586f93a222a7b57e4f704cb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f30d78f4b0a2551cfc050d618dc2ff738d54e474586215ea5eab70b867ed734d",
-				"dweb:/ipfs/QmTojsqpgnavGGvKMKF8Z9H2LWy6Ek6DmnMrPxHxdFgKAa"
+				"bzz-raw://a64294986f36406aee3e414a7b57868fcf70d1a47fea297cb7b243464b702b0d",
+				"dweb:/ipfs/QmXjfkt6dDX8dQ39i2EpAqFK8hadUGafztpQvkqyHhdZFA"
 			]
 		}
 	},

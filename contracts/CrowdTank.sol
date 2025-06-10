@@ -46,7 +46,7 @@ contract CrowdTank {
             name: _name,
             description: _description,
             fundingGoal: _fundingGoal,
-            deadline: block.timestamp+_durationSeconds,
+            deadline: block.timestamp + _durationSeconds,
             amountRaised: 0,
             funded: false
         });
@@ -113,7 +113,7 @@ contract CrowdTank {
 
       // nullclass internship --- task 4 (line 114 to 121)
     function Remaining_Fund(uint projectID) public view returns(uint fundingGoal , uint remainingFund) {
-        project storage Project = Projects[projectID];
+         project storage Project = Projects[projectID];
         fundingGoal = Project.fundingGoal;
         require(Project.creator != address(0), "project has not been created yet!");
         if (Project.amountRaised >= Project.fundingGoal) {
@@ -121,5 +121,11 @@ contract CrowdTank {
         } else {
             remainingFund = Project.fundingGoal - Project.amountRaised;
         }
+    }
+    // nullclass internship--- task 6 
+    function Extend_Deadline(uint _projectID , uint _deadline) external {
+        project storage Project = Projects[_projectID];
+        require(Project.creator == msg.sender , "Only Project creator can extend the deadline!!");
+        Project.deadline += _deadline;
     }
 }
