@@ -127,6 +127,24 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
+						"name": "_projectID",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "Change_Goal",
+						"type": "uint256"
+					}
+				],
+				"name": "Change_FundingGoal",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
 					},
@@ -356,7 +374,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"CROWD_TANK/contracts/CrowdTank.sol": "CrowdTank"
+			"contracts/CrowdTank.sol": "CrowdTank"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -370,12 +388,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"CROWD_TANK/contracts/CrowdTank.sol": {
-			"keccak256": "0xe096246687668f883b34f6fe748632635a9aeb1a6586f93a222a7b57e4f704cb",
+		"contracts/CrowdTank.sol": {
+			"keccak256": "0x5f187002ac60fbfd923dfd3312337eb6f4c5ec761c8136d5cb2720f00e79879c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a64294986f36406aee3e414a7b57868fcf70d1a47fea297cb7b243464b702b0d",
-				"dweb:/ipfs/QmXjfkt6dDX8dQ39i2EpAqFK8hadUGafztpQvkqyHhdZFA"
+				"bzz-raw://95b43f72ce5a78e36ee80be9641f7da9fb42cb28c7f682e783583aded96c2c66",
+				"dweb:/ipfs/QmQEXr6kLDHxsm7MXC1y4yfWwqtyeRRjbkNCqw8qpqWVju"
 			]
 		}
 	},

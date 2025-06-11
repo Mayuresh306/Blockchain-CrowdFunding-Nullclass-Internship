@@ -128,4 +128,13 @@ contract CrowdTank {
         require(Project.creator == msg.sender , "Only Project creator can extend the deadline!!");
         Project.deadline += _deadline;
     }
+
+    // nullclass intership --- task 7
+    function Change_FundingGoal( uint _projectID , uint Change_Goal) external {
+         project storage Project = Projects[_projectID];
+        require(Project.deadline > 0 , "Deadline is over , you Can't change the funding goal !!");
+        require(Project.creator == msg.sender , "You are not the project creator , Only Porject creator can Change !!");
+
+        Project.fundingGoal = Change_Goal;
+    }
 }
