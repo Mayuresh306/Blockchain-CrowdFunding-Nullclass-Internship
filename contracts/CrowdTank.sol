@@ -1,13 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.3;
 
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+
 // creating a crowd funding app as a project (2/6/2025)
 // nullclass internship --- task1 (line 3 to 9 , 25 )
 
-contract CrowdTank {
+contract CrowdTank is ReentrancyGuard {
 
     // nullclass internship --- task2 ( line 9 , 61 , 71 to 73 )
     uint TotalRaisedFunding;
+
+   //nullclass internship --- task 10
+   uint public TotalProjects;
 
     //data type for project details.
     struct project {
@@ -31,11 +36,12 @@ contract CrowdTank {
 
     // events 
     event ProjectCreated(uint indexed projectID , address indexed creator , string name , string description , uint fundingGoal , uint deadline);
-    event funded(uint indexed projectID , address contributor , uint amount);
+    event funded(uint indexed projectID , address contributor , uint amount , uint refund);
 
     // nullclass internship --- task 3 (35 , 36 , 84 , 98)
     event userWithdrawn(uint indexed projectID , address withdrawer , uint amount);
     event creatorWithdrawn(uint indexed projectID , address withdrawer , uint amount );
+    event UserEarlyWithdraw( address indexed user , uint indexed _projectID , uint amount );
 
     // creating the 'project create' function
     function createProject(string memory _name , string memory _description , uint _fundingGoal , uint _durationSeconds , uint _id) external {
@@ -50,26 +56,42 @@ contract CrowdTank {
             amountRaised: 0,
             funded: false
         });
+        TotalProjects++;
         emit ProjectCreated(_id , msg.sender , _name , _description , _fundingGoal , block.timestamp+_durationSeconds);
     }
 
     // creating the 'fund the project' function
-        function fundProject(uint _projectID) external payable {
-         project storage Project = Projects[_projectID];
-         require(block.timestamp<=Project.deadline , "Project deadline is over!");
-         require(!Project.funded , "Project Reached its Funding requirement");
-         require(msg.value>0 , "send some ether to contribute in the project");
-         Project.amountRaised+=msg.value;
-         Contributions[_projectID][msg.sender] = msg.value;
-         // task 2 (line 61)
-         TotalRaisedFunding+=msg.value;
+        function fundProject(uint _projectID) external payable nonReentrant {
+            project storage Project = Projects[_projectID];
+            require(block.timestamp<=Project.deadline , "Project deadline is over!");
+            require(!Project.funded , "Project Reached its Funding requirement");
+            require(msg.value>0 , "send some ether to contribute in the project");
+            require(msg.value <= Project.fundingGoal, "Amount Contributed is more than Goal");
+            uint remaining = Project.fundingGoal - Project.amountRaised;
+            uint amountToAccept;
+            uint refund;
+            if(msg.value > remaining) {
+                amountToAccept = remaining;
+                refund = msg.value - remaining;
+            } else {
+                amountToAccept = msg.value;
+                refund = 0;
+            }
+            Project.amountRaised += amountToAccept;
+            Contributions[_projectID][msg.sender] = amountToAccept;
+            // task 2 (line 61)
+            TotalRaisedFunding+=amountToAccept;
+            if (refund > 0) {
+                (bool sent, ) = payable(msg.sender).call{value: refund}("");
+                require(sent , "Refund Failed");
+            }
 
-         emit funded(_projectID, msg.sender, msg.value);
+            emit funded(_projectID, msg.sender, amountToAccept , refund);
 
-         if (Project.amountRaised>=Project.fundingGoal) {
-            Project.funded = true;
-         }
-    }
+            if (Project.amountRaised>=Project.fundingGoal) {
+                Project.funded = true;
+            }
+        }
 
     // task 2 ( line 71 to 73 )
     function Get_Total_Raised_Funding() view public returns(uint) {
@@ -136,5 +158,32 @@ contract CrowdTank {
         require(Project.creator == msg.sender , "You are not the project creator , Only Porject creator can Change !!");
 
         Project.fundingGoal = Change_Goal;
+    }
+
+    // nullclass internship --- task 9
+    function Funding_Raised_Percentage( uint _projectID ) public view  returns(uint) {
+        project storage Project = Projects[_projectID];
+        uint Raised_Percentage = ( Project.amountRaised*100 ) / Project.fundingGoal;
+        return Raised_Percentage;
+    }
+
+    // nullclass internship --- task 11
+    function userEarlyWithdraw( uint _projectID , uint withdrawn_amount) external payable {
+        project storage Project = Projects[_projectID];
+        require(block.timestamp < Project.deadline, "Cannot withdraw after deadline");
+        uint contributed_amount = Contributions[_projectID][msg.sender];
+        require(contributed_amount > 0 , "No Funds to withdraw!!");
+        require(withdrawn_amount <= contributed_amount , "Withdraw amount exceeds your contribution");
+
+        // updating the state var before sending funds 
+        Project.amountRaised -= withdrawn_amount;
+        Contributions[_projectID][msg.sender] -= withdrawn_amount;
+        TotalRaisedFunding -= withdrawn_amount;
+
+        // sending funds to user
+        (bool success, ) = payable(msg.sender).call{value : withdrawn_amount}("");
+        require(success , "withdraw failed!!!!");
+
+        emit UserEarlyWithdraw(msg.sender, _projectID, withdrawn_amount);
     }
 }

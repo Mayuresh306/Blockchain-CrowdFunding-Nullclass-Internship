@@ -6,6 +6,11 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [],
+				"name": "ReentrancyGuardReentrantCall",
+				"type": "error"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -53,6 +58,31 @@
 				"inputs": [
 					{
 						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "_projectID",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "UserEarlyWithdraw",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
 						"internalType": "uint256",
 						"name": "projectID",
 						"type": "uint256"
@@ -92,6 +122,12 @@
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "refund",
 						"type": "uint256"
 					}
 				],
@@ -181,6 +217,25 @@
 				"name": "Extend_Deadline",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_projectID",
+						"type": "uint256"
+					}
+				],
+				"name": "Funding_Raised_Percentage",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -289,6 +344,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "TotalProjects",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "string",
@@ -353,6 +421,24 @@
 						"internalType": "uint256",
 						"name": "_projectID",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "withdrawn_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "userEarlyWithdraw",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_projectID",
+						"type": "uint256"
 					}
 				],
 				"name": "userWithdraw",
@@ -362,6 +448,13 @@
 			}
 		],
 		"devdoc": {
+			"errors": {
+				"ReentrancyGuardReentrantCall()": [
+					{
+						"details": "Unauthorized reentrant call."
+					}
+				]
+			},
 			"kind": "dev",
 			"methods": {},
 			"version": 1
@@ -388,12 +481,20 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/CrowdTank.sol": {
-			"keccak256": "0x5f187002ac60fbfd923dfd3312337eb6f4c5ec761c8136d5cb2720f00e79879c",
+		"@openzeppelin/contracts/utils/ReentrancyGuard.sol": {
+			"keccak256": "0x11a5a79827df29e915a12740caf62fe21ebe27c08c9ae3e09abe9ee3ba3866d3",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://95b43f72ce5a78e36ee80be9641f7da9fb42cb28c7f682e783583aded96c2c66",
-				"dweb:/ipfs/QmQEXr6kLDHxsm7MXC1y4yfWwqtyeRRjbkNCqw8qpqWVju"
+				"bzz-raw://3cf0c69ab827e3251db9ee6a50647d62c90ba580a4d7bbff21f2bea39e7b2f4a",
+				"dweb:/ipfs/QmZiKwtKU1SBX4RGfQtY7PZfiapbbu6SZ9vizGQD9UHjRA"
+			]
+		},
+		"contracts/CrowdTank.sol": {
+			"keccak256": "0x2c378eac20e658aea9a72e680687e6625ba2451dab1e66ba7f31130348013e0d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://10c766638aab460d7d3f64e0100f977ca598b00c4075d90bb2cc049c973288a2",
+				"dweb:/ipfs/QmSAdPknSfNgw18K9M5CRXnZkVkArPGq7jFFhALvRzKmUj"
 			]
 		}
 	},
