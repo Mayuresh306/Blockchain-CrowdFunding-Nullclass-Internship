@@ -7,6 +7,11 @@
 		"abi": [
 			{
 				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
 				"name": "ReentrancyGuardReentrantCall",
 				"type": "error"
 			},
@@ -83,6 +88,19 @@
 				"inputs": [
 					{
 						"indexed": true,
+						"internalType": "address",
+						"name": "creator",
+						"type": "address"
+					}
+				],
+				"name": "addedCreator",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
 						"internalType": "uint256",
 						"name": "projectID",
 						"type": "uint256"
@@ -139,6 +157,19 @@
 				"inputs": [
 					{
 						"indexed": true,
+						"internalType": "address",
+						"name": "creator",
+						"type": "address"
+					}
+				],
+				"name": "removedCreator",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
 						"internalType": "uint256",
 						"name": "projectID",
 						"type": "uint256"
@@ -158,6 +189,38 @@
 				],
 				"name": "userWithdrawn",
 				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_creator",
+						"type": "address"
+					}
+				],
+				"name": "Add_Creators",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "AuthorizedCreators",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
 				"inputs": [
@@ -217,6 +280,19 @@
 				"name": "Extend_Deadline",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "Failed_Funded_Projects",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -295,6 +371,16 @@
 						"internalType": "bool",
 						"name": "funded",
 						"type": "bool"
+					},
+					{
+						"internalType": "address",
+						"name": "highest_Funder",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "highest_contribution",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -318,6 +404,32 @@
 					{
 						"internalType": "uint256",
 						"name": "remainingFund",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_creator",
+						"type": "address"
+					}
+				],
+				"name": "Remove_Creators",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "Successful_Funded_Projects",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
 						"type": "uint256"
 					}
 				],
@@ -351,6 +463,19 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "admin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -490,11 +615,11 @@
 			]
 		},
 		"contracts/CrowdTank.sol": {
-			"keccak256": "0x2c378eac20e658aea9a72e680687e6625ba2451dab1e66ba7f31130348013e0d",
+			"keccak256": "0xf32d10984ab55689a2bcd6c34323df9fe7696619e79f310fa2f15169164b690e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://10c766638aab460d7d3f64e0100f977ca598b00c4075d90bb2cc049c973288a2",
-				"dweb:/ipfs/QmSAdPknSfNgw18K9M5CRXnZkVkArPGq7jFFhALvRzKmUj"
+				"bzz-raw://97a9b152fb83d38009def35dffbfc710a8a6ffabac9fce47c8492d1706bc7531",
+				"dweb:/ipfs/QmWaXfSPaWzsYBSwkd1RZo7hTg8FzHSyFFxUXVRavNTjF6"
 			]
 		}
 	},

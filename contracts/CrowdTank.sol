@@ -8,12 +8,44 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 contract CrowdTank is ReentrancyGuard {
 
-    // nullclass internship --- task2 ( line 9 , 61 , 71 to 73 )
+    // nullclass internship --- task2 
     uint TotalRaisedFunding;
 
    //nullclass internship --- task 10
    uint public TotalProjects;
 
+    // nullclass internship --- task 12
+   address public admin;
+
+    uint public Successful_Funded_Projects;
+    uint public Failed_Funded_Projects;
+
+   event addedCreator(address indexed creator);
+   event removedCreator(address indexed creator);
+
+   constructor() {
+        admin = msg.sender;
+   }
+
+   modifier OnlyAdmin() {
+    require(admin == msg.sender , "Only Admin can access");_;
+   }
+
+    // to store authorized creators 
+   mapping (address => bool) public AuthorizedCreators;
+
+    function Add_Creators( address _creator ) external OnlyAdmin {
+        AuthorizedCreators[_creator] = true;
+
+        emit addedCreator(_creator);
+    }
+    
+    function Remove_Creators( address _creator ) external OnlyAdmin {
+        AuthorizedCreators[_creator] = false;
+
+        emit removedCreator(_creator);
+    }
+    
     //data type for project details.
     struct project {
         address creator;
@@ -23,6 +55,8 @@ contract CrowdTank is ReentrancyGuard {
         uint deadline;
         uint amountRaised;
         bool funded;
+        address highest_Funder;
+        uint highest_contribution;
     }
 
     // projctID => project details
@@ -46,6 +80,7 @@ contract CrowdTank is ReentrancyGuard {
     // creating the 'project create' function
     function createProject(string memory _name , string memory _description , uint _fundingGoal , uint _durationSeconds , uint _id) external {
         require(!isIdUsed[_id], "Project ID is already in use!" );
+        require(AuthorizedCreators[msg.sender] , "Only Authorized creators can access!!");
         isIdUsed[_id] = true;
         Projects[_id] = project({
             creator : msg.sender,
@@ -54,7 +89,9 @@ contract CrowdTank is ReentrancyGuard {
             fundingGoal: _fundingGoal,
             deadline: block.timestamp + _durationSeconds,
             amountRaised: 0,
-            funded: false
+            funded: false,
+            highest_Funder: address(0),
+            highest_contribution:0
         });
         TotalProjects++;
         emit ProjectCreated(_id , msg.sender , _name , _description , _fundingGoal , block.timestamp+_durationSeconds);
@@ -85,14 +122,29 @@ contract CrowdTank is ReentrancyGuard {
                 (bool sent, ) = payable(msg.sender).call{value: refund}("");
                 require(sent , "Refund Failed");
             }
+            // nullclass internship --- task 13
+            uint userTotal = Contributions[_projectID][msg.sender];
+            if (userTotal > Project.highest_contribution) {
+                Project.highest_contribution = userTotal;
+                Project.highest_Funder = msg.sender;
+            }
 
             emit funded(_projectID, msg.sender, amountToAccept , refund);
 
             if (Project.amountRaised>=Project.fundingGoal) {
                 Project.funded = true;
             }
-        }
 
+            //nullclass intership --- task 14
+            if ((!Project.funded) && (block.timestamp >= Project.deadline)) {
+                Project.funded = true;
+                Successful_Funded_Projects++;
+            } else if (Project.funded = false) {
+                require(block.timestamp >= Project.deadline , "Deadline is not reached yet");
+                require(!Project.funded, "Project already funded");
+                Failed_Funded_Projects++;
+            }
+        }
     // task 2 ( line 71 to 73 )
     function Get_Total_Raised_Funding() view public returns(uint) {
         return TotalRaisedFunding;
@@ -103,9 +155,12 @@ contract CrowdTank is ReentrancyGuard {
         project storage Project = Projects[_projectID];
         require(Project.amountRaised<Project.fundingGoal , "Funding goal has reached , user can't withdraw");
         uint fundsContributed = Contributions[_projectID][msg.sender];
+         Project.amountRaised -= fundsContributed;
+        Contributions[_projectID][msg.sender] -= fundsContributed;
+        TotalRaisedFunding -= fundsContributed;
         payable(msg.sender).transfer(fundsContributed);
         // task3 --- (line 84)
-        emit userWithdrawn(_projectID, msg.sender, msg.value);
+        emit userWithdrawn(_projectID, msg.sender, fundsContributed);
         
     }
 
@@ -175,15 +230,16 @@ contract CrowdTank is ReentrancyGuard {
         require(contributed_amount > 0 , "No Funds to withdraw!!");
         require(withdrawn_amount <= contributed_amount , "Withdraw amount exceeds your contribution");
 
-        // updating the state var before sending funds 
+        // updating the state var before sending funds
         Project.amountRaised -= withdrawn_amount;
         Contributions[_projectID][msg.sender] -= withdrawn_amount;
         TotalRaisedFunding -= withdrawn_amount;
 
         // sending funds to user
-        (bool success, ) = payable(msg.sender).call{value : withdrawn_amount}("");
-        require(success , "withdraw failed!!!!");
+        (bool sent, ) = payable(msg.sender).call{value : withdrawn_amount}("");
+        require(sent , "withdraw failed!!!!");
 
         emit UserEarlyWithdraw(msg.sender, _projectID, withdrawn_amount);
     }
+
 }
