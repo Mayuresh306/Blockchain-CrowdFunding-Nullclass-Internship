@@ -283,19 +283,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "Failed_Funded_Projects",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -316,11 +303,62 @@
 			},
 			{
 				"inputs": [],
+				"name": "GetProjectStatus",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "Successfully_Funded_Projects",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "Failed_To_Fund_Projects",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "Get_Total_Raised_Funding",
 				"outputs": [
 					{
 						"internalType": "uint256",
 						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "ProjectStatistics",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "totalProjects",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "successfulProjects",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "failedProjects",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "activeProjects",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalFundsRaised",
 						"type": "uint256"
 					}
 				],
@@ -381,6 +419,16 @@
 						"internalType": "uint256",
 						"name": "highest_contribution",
 						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "failed_projects",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "status_processed",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -424,19 +472,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "Successful_Funded_Projects",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -466,6 +501,13 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "UpdateProjectStatus",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -592,7 +634,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/CrowdTank.sol": "CrowdTank"
+			"CROWD_TANK/contracts/CrowdTank.sol": "CrowdTank"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -614,12 +656,12 @@
 				"dweb:/ipfs/QmZiKwtKU1SBX4RGfQtY7PZfiapbbu6SZ9vizGQD9UHjRA"
 			]
 		},
-		"contracts/CrowdTank.sol": {
-			"keccak256": "0xf32d10984ab55689a2bcd6c34323df9fe7696619e79f310fa2f15169164b690e",
+		"CROWD_TANK/contracts/CrowdTank.sol": {
+			"keccak256": "0x9bc71f6c49e9f7f2797b98bca8c975282d71110d09bd97224b77fdaf6f0eb03b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://97a9b152fb83d38009def35dffbfc710a8a6ffabac9fce47c8492d1706bc7531",
-				"dweb:/ipfs/QmWaXfSPaWzsYBSwkd1RZo7hTg8FzHSyFFxUXVRavNTjF6"
+				"bzz-raw://1daef53ec78b2871046a63c89b7c5cd05669a32a43fd57a435810a68752716f0",
+				"dweb:/ipfs/QmchhY3UB43T144asFeB5EZ7hbEWimqY64wyzyT7StjfvT"
 			]
 		}
 	},

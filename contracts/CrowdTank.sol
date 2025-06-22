@@ -17,8 +17,8 @@ contract CrowdTank is ReentrancyGuard {
     // nullclass internship --- task 12
    address public admin;
 
-    uint public Successful_Funded_Projects;
-    uint public Failed_Funded_Projects;
+    uint Successful_Funded_Projects;
+    uint Failed_Funded_Projects;
 
    event addedCreator(address indexed creator);
    event removedCreator(address indexed creator);
@@ -57,7 +57,11 @@ contract CrowdTank is ReentrancyGuard {
         bool funded;
         address highest_Funder;
         uint highest_contribution;
+        bool failed_projects;
+        bool status_processed;
     }
+    
+    mapping (uint => bool) project_results;
 
     // projctID => project details
     mapping (uint => project) public Projects;
@@ -67,6 +71,8 @@ contract CrowdTank is ReentrancyGuard {
 
     // projectID => whether the id is used or not
     mapping (uint => bool) isIdUsed;
+
+    uint[] projectIDs;
 
     // events 
     event ProjectCreated(uint indexed projectID , address indexed creator , string name , string description , uint fundingGoal , uint deadline);
@@ -91,9 +97,12 @@ contract CrowdTank is ReentrancyGuard {
             amountRaised: 0,
             funded: false,
             highest_Funder: address(0),
-            highest_contribution:0
+            highest_contribution:0,
+            failed_projects: false,
+            status_processed: false
         });
         TotalProjects++;
+        projectIDs.push(_id);
         emit ProjectCreated(_id , msg.sender , _name , _description , _fundingGoal , block.timestamp+_durationSeconds);
     }
 
@@ -131,23 +140,56 @@ contract CrowdTank is ReentrancyGuard {
 
             emit funded(_projectID, msg.sender, amountToAccept , refund);
 
-            if (Project.amountRaised>=Project.fundingGoal) {
+            if (Project.amountRaised>=Project.fundingGoal && !Project.status_processed) {
                 Project.funded = true;
-            }
-
-            //nullclass intership --- task 14
-            if ((!Project.funded) && (block.timestamp >= Project.deadline)) {
-                Project.funded = true;
+                Project.status_processed = true;
                 Successful_Funded_Projects++;
-            } else if (Project.funded = false) {
-                require(block.timestamp >= Project.deadline , "Deadline is not reached yet");
-                require(!Project.funded, "Project already funded");
-                Failed_Funded_Projects++;
             }
         }
-    // task 2 ( line 71 to 73 )
-    function Get_Total_Raised_Funding() view public returns(uint) {
-        return TotalRaisedFunding;
+
+        function UpdateProjectStatus() public {
+            for (uint i = 0; i < projectIDs.length; i++) {
+                uint projectID = projectIDs[i];
+                project storage Project = Projects[projectID];
+                if (!Project.status_processed && block.timestamp >= Project.deadline) {
+                    Project.status_processed = true;
+                    if (Project.amountRaised >= Project.fundingGoal && block.timestamp >= Project.deadline) {
+                        if (!Project.funded) {
+                            Project.funded = true;
+                            Successful_Funded_Projects++;
+                        }
+                    } else {
+                        Project.failed_projects = true;
+                        Failed_Funded_Projects++;
+                    }
+                }
+            }
+        }
+
+        function GetProjectStatus() view public returns(uint Successfully_Funded_Projects , uint Failed_To_Fund_Projects) {
+            return (Successful_Funded_Projects, Failed_Funded_Projects);
+        }
+            
+        // task 2 ( line 71 to 73 )
+        function Get_Total_Raised_Funding() view public returns(uint) {
+            return TotalRaisedFunding;
+        }
+
+        // function to get overall projects statistics
+        function ProjectStatistics() public view returns(
+        uint totalProjects,
+        uint successfulProjects,
+        uint failedProjects,
+        uint activeProjects,
+        uint totalFundsRaised
+    ) {
+        return (
+            TotalProjects,
+            Successful_Funded_Projects,
+            Failed_Funded_Projects,
+            TotalProjects - Successful_Funded_Projects - Failed_Funded_Projects,
+            TotalRaisedFunding
+        );
     }
 
     // withdrawing fund = user
@@ -155,11 +197,26 @@ contract CrowdTank is ReentrancyGuard {
         project storage Project = Projects[_projectID];
         require(Project.amountRaised<Project.fundingGoal , "Funding goal has reached , user can't withdraw");
         uint fundsContributed = Contributions[_projectID][msg.sender];
-         Project.amountRaised -= fundsContributed;
+        require(fundsContributed > 0, "No funds to withdraw");
+
+        bool wasPreviouslyFunded = Project.funded;
+
+        Project.amountRaised -= fundsContributed;
         Contributions[_projectID][msg.sender] -= fundsContributed;
         TotalRaisedFunding -= fundsContributed;
-        payable(msg.sender).transfer(fundsContributed);
-        // task3 --- (line 84)
+
+        if (wasPreviouslyFunded && Project.amountRaised < Project.fundingGoal) {
+            Project.funded = false;
+            Project.status_processed = false; // Allow re-evaluation at deadline
+            if (Successful_Funded_Projects > 0) {
+                Successful_Funded_Projects--;
+            }
+        }
+
+        (bool sent, ) = payable(msg.sender).call{value: fundsContributed}("");
+        require(sent , "Withdrawal Failed");
+
+        // task3
         emit userWithdrawn(_projectID, msg.sender, fundsContributed);
         
     }
@@ -230,10 +287,20 @@ contract CrowdTank is ReentrancyGuard {
         require(contributed_amount > 0 , "No Funds to withdraw!!");
         require(withdrawn_amount <= contributed_amount , "Withdraw amount exceeds your contribution");
 
+        bool wasPreviouslyFunded = Project.funded;
+
         // updating the state var before sending funds
         Project.amountRaised -= withdrawn_amount;
         Contributions[_projectID][msg.sender] -= withdrawn_amount;
         TotalRaisedFunding -= withdrawn_amount;
+
+        if (wasPreviouslyFunded && Project.amountRaised < Project.fundingGoal) {
+            Project.funded = false;
+            Project.status_processed = false; // Allow re-evaluation at deadline
+            if (Successful_Funded_Projects > 0) {
+                Successful_Funded_Projects--;
+            }
+        }
 
         // sending funds to user
         (bool sent, ) = payable(msg.sender).call{value : withdrawn_amount}("");
@@ -241,5 +308,4 @@ contract CrowdTank is ReentrancyGuard {
 
         emit UserEarlyWithdraw(msg.sender, _projectID, withdrawn_amount);
     }
-
 }
