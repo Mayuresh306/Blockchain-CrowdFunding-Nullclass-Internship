@@ -20,7 +20,7 @@ This project is a decentralized crowdfunding smart contract developed as part of
 
  📄 Smart Contract
 
-Contract Name: `CrowdTank.sol`  
+Contract Name: "CrowdTank.sol"
 Contains all logic for:
 
 - Project creation, funding, and withdrawals
@@ -97,7 +97,7 @@ Final internship report is included in this repository:
 Mayureshwar Reddy
 📧 mayureshreddy2006@gmail.com
 📍 Kalyan, Maharashtra
-🔗 LinkedIn
+🔗 https://www.linkedin.com/in/mayureshwar-reddy-37a4a2342?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app
 
 📜 License
 MIT License © 2025 Mayureshwar Reddy
