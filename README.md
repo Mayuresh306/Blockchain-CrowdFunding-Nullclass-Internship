@@ -82,19 +82,19 @@ Contains all logic for:
 ---
 
 🛡 Bonus: Use dotenv in your scripts securely
-Your Hardhat config file should use:
+- Your Hardhat config file should use:
 
-require("dotenv").config();
+- require("dotenv").config();
 
-module.exports = {
-  networks: {
-    sepolia: {
-      url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
-      accounts: [process.env.PRIVATE_KEY]
-    }
-  },
-  solidity: "0.8.3"
-};
+- module.exports = {
+  - networks: {
+    - sepolia: {
+      - url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      - accounts: [process.env.PRIVATE_KEY]
+     }
+   },
+   solidity: "0.8.3"
+ };
 
 ---
 
